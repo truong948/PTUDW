@@ -6,35 +6,32 @@ const app = express();
 
 const port = process.env.PORT || 9000
 
-  
+//xử lý khi người dùng gửi
 
-// Nối tiếp Route handler
+//request kiểu GET tới thư mục gốc (/)
 
-app.get('/profile', (req, res, next) =>
-
+app.get("/", (req,res) =>
 {
 
-      console.log('Kiểm tra quyền truy cập...');
+    //dùng phương thức query của req để lấy thông tin
 
-      req.user = { name: "Ti"}; // Giả lập thêm dữ liệu
+    //của GET request
 
-      next(); // Chuyển tiếp
+    const product = req.query.name;
 
-    },
+    const size = req.query.size;
 
-    (req, res) => { 
+    //dùng hàm send() của đối tượng res
 
-res.send(`Chào bạn: ${req.user.name}`);
+    //để gửi dữ liệu về client
 
-    }
+    res.send(`Bạn muốn mua ${product} cỡ ${size}`);
 
-  );
+});
 
- 
+//khoi dong web server
 
-// khoi dong web server
-
-app.listen(port, () => {
+app.listen(port,() => {
 
     console.log(`server dang chay tren cong ${port}`);
 
