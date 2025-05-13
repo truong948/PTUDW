@@ -1,38 +1,41 @@
 'use strict'
 
-const express = require('express')
+const express = require('express');
+const expressHandlebars = require('express-handlebars');
 
 const app = express();
+const port = process.env.PORT || 9000;
+// cấu hình public static folder
+app.use(express.static(__dirname+'/Public'));
 
-const port = process.env.PORT || 9000
+// Cấu hình handlebars
+app.engine('hbs', expressHandlebars.engine({
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials',
+    extname: 'hbs',
+    defaultLayout: 'main'
+}));
+app.set('view engine', 'hbs');
 
-//xử lý khi người dùng gửi
+//Cho phép truy cập thư mục Public (ảnh, css, js)
+app.use(express.static('Public'));
 
-//request kiểu GET tới thư mục gốc (/)
+// Route index
+// routes va render trang index
 
-app.get("/", (req,res) =>
-{
+app.get('/', (req, res) => {
 
-    //dùng phương thức query của req để lấy thông tin
-
-    //của GET request
-
-    const product = req.query.name;
-
-    const size = req.query.size;
-
-    //dùng hàm send() của đối tượng res
-
-    //để gửi dữ liệu về client
-
-    res.send(`Bạn muốn mua ${product} cỡ ${size}`);
+    res.render('index');
+  
+// se lay index.hbs do vao {{{ body }}} trong main.hbs
 
 });
+app.get('/:page', (req, res) =>{
 
-//khoi dong web server
+    res.render(req.params.page);
 
-app.listen(port,() => {
-
-    console.log(`server dang chay tren cong ${port}`);
-
+});
+// Khởi động server
+app.listen(port, () => {
+    console.log(`Server đang chạy tại http://localhost:${port}`);
 });
